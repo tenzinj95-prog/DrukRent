@@ -1,0 +1,235 @@
+/* =========================
+   TABLET
+========================= */
+
+@media(max-width:1024px){
+
+
+.navbar{
+
+    padding:20px 30px;
+
+}
+
+
+.property-container{
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+}
+
+
+
+.hero h1{
+
+    font-size:45px;
+
+}
+
+
+.search-box input{
+
+    width:280px;
+
+}
+
+
+}
+
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+
+
+.navbar{
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+
+
+.nav-links{
+
+    flex-direction:column;
+
+    text-align:center;
+
+    width:100%;
+
+}
+
+
+
+.nav-links li{
+
+    margin:10px 0;
+
+}
+
+
+
+
+
+.hero{
+
+    height:auto;
+
+    padding:80px 20px;
+
+}
+
+
+
+
+.hero h1{
+
+    font-size:32px;
+
+}
+
+
+
+.hero p{
+
+    font-size:17px;
+
+}
+
+
+
+
+
+.search-box{
+
+    flex-direction:column;
+
+    width:100%;
+
+}
+
+
+
+
+.search-box input,
+
+.search-box button{
+
+    width:100%;
+
+}
+
+
+
+
+
+
+.stats{
+
+    grid-template-columns:1fr;
+
+    padding:25px;
+
+}
+
+
+
+
+
+
+.property-container{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+
+.property-card img{
+
+    height:220px;
+
+}
+
+
+
+
+
+.add-property form{
+
+    width:90%;
+
+}
+
+
+
+
+}
+
+
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+
+@media(max-width:480px){
+
+
+
+.logo{
+
+    font-size:24px;
+
+}
+
+
+
+.hero h1{
+
+    font-size:26px;
+
+}
+
+
+
+.featured h2{
+
+    font-size:28px;
+
+}
+
+
+
+.property-info h3{
+
+    font-size:20px;
+
+}
+
+
+
+.btn{
+
+    width:100%;
+
+    text-align:center;
+
+    margin-top:8px;
+
+}
+
+
+
+}

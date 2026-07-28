@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+Add Property - DrukRent
+</title>
+
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body>
+
+
+
+<header>
+
+<nav class="navbar">
+
+
+<h2 class="logo">
+🏠 DrukRent
+</h2>
+
+
+
+
+<ul class="nav-links">
+
+
+<li>
+<a href="index.html">
+Home
+</a>
+</li>
+
+
+<li>
+<a href="properties.html">
+Properties
+</a>
+</li>
+
+
+<li>
+<a href="add-property.html">
+Add Property
+</a>
+</li>
+
+
+<li>
+<a href="favorites.html">
+❤️ Favorites
+</a>
+</li>
+
+
+<li>
+<a href="about.html">
+About
+</a>
+</li>
+
+
+<li>
+<a href="contact.html">
+Contact
+</a>
+</li>
+
+
+</ul>
+
+
+
+</nav>
+
+</header>
+
+
+
+
+
+
+
+
+<section class="add-property">
+
+
+<div class="form-container">
+
+
+
+
+
+<h1>
+🏠 Add New Rental Property
+</h1>
+
+
+
+
+<p>
+Fill the details below to list your property on DrukRent.
+</p>
+
+
+
+
+
+
+
+<form id="propertyForm">
+
+
+
+
+
+
+
+<label>
+Property Title
+</label>
+
+
+<input
+
+type="text"
+
+id="title"
+
+placeholder="Example: Cozy Family House"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Location
+</label>
+
+
+<input
+
+type="text"
+
+id="location"
+
+placeholder="Example: Babesa"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Dzongkhag
+</label>
+
+
+<input
+
+type="text"
+
+id="dzongkhag"
+
+placeholder="Example: Thimphu"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Gewog
+</label>
+
+
+<input
+
+type="text"
+
+id="gewog"
+
+placeholder="Example: Kawang"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Google Map Link (Optional)
+</label>
+
+
+<input
+
+type="text"
+
+id="map"
+
+placeholder="Paste Google Maps link">
+
+
+
+
+
+
+
+
+<label>
+Monthly Rent (Nu.)
+</label>
+
+
+<input
+
+type="number"
+
+id="rent"
+
+placeholder="Example: 12000"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Bedrooms
+</label>
+
+
+<input
+
+type="number"
+
+id="bedrooms"
+
+placeholder="Number of bedrooms"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Bathrooms
+</label>
+
+
+<input
+
+type="number"
+
+id="bathrooms"
+
+placeholder="Number of bathrooms"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+House Images
+</label>
+
+
+<input
+
+type="file"
+
+id="images"
+
+accept="image/*"
+
+multiple
+
+required>
+
+
+
+
+<div id="imagePreviewContainer"></div>
+
+
+
+<p id="uploadStatus"></p>
+
+
+
+
+
+
+
+
+
+<h2>
+Owner Information
+</h2>
+
+
+
+
+
+
+
+<label>
+Owner Name
+</label>
+
+
+<input
+
+type="text"
+
+id="owner"
+
+placeholder="Owner name"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Phone / WhatsApp Number
+</label>
+
+
+<input
+
+type="tel"
+
+id="phone"
+
+placeholder="Example: 17970701"
+
+required>
+
+
+
+
+
+
+
+
+<label>
+Property Description
+</label>
+
+
+<textarea
+
+id="description"
+
+rows="6"
+
+placeholder="Describe the property, facilities, nearby places...">
+
+</textarea>
+
+
+
+
+
+
+
+
+
+<h2>
+💳 Listing Payment
+</h2>
+
+
+
+
+
+
+<div class="payment-box">
+
+
+
+<p>
+Before your property appears on DrukRent, please complete the listing payment.
+</p>
+
+
+<p>
+<b>Account Name:</b> Jigme Tenzin
+</p>
+
+
+<p>
+<b>Account Number:</b> 209231578
+</p>
+
+
+<p>
+<b>Listing Fee:</b> Nu. 200
+</p>
+
+
+<p>
+After payment, upload the screenshot below.
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<label>
+Payment Screenshot
+</label>
+
+
+<input
+
+type="file"
+
+id="paymentScreenshot"
+
+accept="image/*"
+
+required>
+
+
+
+
+
+<div id="paymentPreviewContainer"></div>
+
+
+
+
+
+
+
+
+<button
+
+type="submit"
+
+class="submit-btn">
+
+
+Submit Property For Approval
+
+
+</button>
+
+
+
+
+
+
+</form>
+
+
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<footer>
+
+
+<p>
+© 2026 DrukRent. All Rights Reserved.
+</p>
+
+
+</footer>
+
+
+
+
+
+
+
+
+<script
+
+type="module"
+
+src="js/add-property.js">
+
+</script>
+
+
+
+
+</body>
+
+</html>
