@@ -3,18 +3,13 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties - DrukRent</title>
 
-<title>
-Properties - DrukRent
-</title>
-
-
-<link rel="stylesheet" href="css/style.css">
-
-<link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
 
 </head>
 
@@ -22,62 +17,30 @@ Properties - DrukRent
 <body>
 
 
-<!-- ================= HEADER ================= -->
+<!-- HEADER -->
 
 <header>
 
 <nav class="navbar">
 
-<h2 class="logo">
-🏠 DrukRent
-</h2>
+    <h2 class="logo">
+        🏠 DrukRent
+    </h2>
 
 
-<ul class="nav-links">
+    <ul class="nav-links">
 
-<li>
-<a href="index.html">
-Home
-</a>
-</li>
+        <li><a href="index.html">Home</a></li>
 
+        <li><a href="properties.html">Properties</a></li>
 
-<li>
-<a href="properties.html">
-Properties
-</a>
-</li>
+        <li><a href="add-property.html">Add Property</a></li>
 
+        <li><a href="favorites.html">❤️ Favorites</a></li>
 
-<li>
-<a href="add-property.html">
-Add Property
-</a>
-</li>
+        <li><a href="contact.html">Contact</a></li>
 
-
-<li>
-<a href="favorites.html">
-❤️ Favorites
-</a>
-</li>
-
-
-<li>
-<a href="contact.html">
-Contact
-</a>
-</li>
-
-
-<li>
-<a href="admin-login.html">
-Admin
-</a>
-</li>
-
-
-</ul>
+    </ul>
 
 </nav>
 
@@ -86,8 +49,8 @@ Admin
 
 
 
-<!-- ================= PROPERTIES ================= -->
 
+<!-- PROPERTY SECTION -->
 
 <section class="featured">
 
@@ -98,7 +61,7 @@ Find Rental Homes in Bhutan 🇧🇹
 
 
 <p>
-Browse approved rental properties and contact owners directly.
+Browse houses, apartments and rooms available for rent.
 </p>
 
 
@@ -108,18 +71,12 @@ Browse approved rental properties and contact owners directly.
 
 <div class="search-box">
 
-<input
-
+<input 
 type="text"
-
 id="searchProperty"
-
 placeholder="Search location or house name">
 
-
 </div>
-
-
 
 
 
@@ -130,27 +87,29 @@ placeholder="Search location or house name">
 <div class="filters">
 
 
-
 <select id="dzongkhagFilter">
 
 <option value="">
 All Dzongkhag
 </option>
 
-</select>
+<option value="Thimphu">
+Thimphu
+</option>
 
+<option value="Paro">
+Paro
+</option>
 
+<option value="Punakha">
+Punakha
+</option>
 
-
-
-<select id="gewogFilter">
-
-<option value="">
-Select Dzongkhag First
+<option value="Chukha">
+Chukha
 </option>
 
 </select>
-
 
 
 
@@ -178,13 +137,7 @@ Any Bedroom
 4 Bedrooms
 </option>
 
-<option value="5">
-5+ Bedrooms
-</option>
-
 </select>
-
-
 
 
 
@@ -196,56 +149,34 @@ Any Bedroom
 Any Rent
 </option>
 
-
 <option value="10000">
 Below Nu. 10,000
 </option>
-
 
 <option value="20000">
 Below Nu. 20,000
 </option>
 
-
 <option value="30000">
 Below Nu. 30,000
 </option>
 
-
-<option value="50000">
-Below Nu. 50,000
-</option>
-
-
-<option value="50001">
-Above Nu. 50,000
-</option>
-
-
 </select>
 
 
-
 </div>
 
 
 
 
 
+<!-- PROPERTY CARDS WILL APPEAR HERE -->
 
-
-
-<!-- PROPERTY CARDS -->
-
-<div
-
+<div 
 class="property-container"
-
 id="propertyContainer">
 
 </div>
-
-
 
 
 
@@ -254,11 +185,6 @@ id="propertyContainer">
 
 
 
-
-
-
-
-<!-- FOOTER -->
 
 <footer>
 
@@ -273,16 +199,7 @@ id="propertyContainer">
 
 
 
-<!-- FIREBASE PROPERTY SCRIPT -->
-
-<script
-
-type="module"
-
-src="js/property-display.js">
-
-</script>
-
+<script type="module" src="js/property-display.js"></script>
 
 
 </body>
