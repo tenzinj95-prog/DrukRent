@@ -20,22 +20,22 @@ import {
 
 
 
-const container =
-document.getElementById(
-    "propertyContainer"
-);
+// =====================================
+// ELEMENTS
+// =====================================
 
+
+const container =
+document.getElementById("propertyContainer");
 
 
 const searchInput =
-document.getElementById(
-    "searchInput"
-);
+document.getElementById("searchInput");
+
 
 
 
 let allProperties = [];
-
 
 
 
@@ -49,22 +49,17 @@ let allProperties = [];
 
 function normalizeText(text){
 
+    return String(text)
 
-return String(text)
+    .toLowerCase()
 
-.toLowerCase()
+    .replace(/\s+/g,"")
 
-.replace(/\s+/g,"")
+    .replace(/-/g,"")
 
-.replace(/-/g,"")
-
-.trim();
-
+    .trim();
 
 }
-
-
-
 
 
 
@@ -79,122 +74,94 @@ return String(text)
 async function loadProperties(){
 
 
+    console.log("Loading properties once");
 
-try{
+
+    try{
 
 
-const snapshot =
-
-await getDocs(
-
-collection(
-db,
-"properties"
-)
-
-);
+        const snapshot =
+        await getDocs(
+            collection(db,"properties")
+        );
 
 
 
-
-
-allProperties = [];
-
+        allProperties = [];
 
 
 
-
-snapshot.forEach(doc=>{
-
-
-const property = {
+        snapshot.forEach(doc=>{
 
 
-id:doc.id,
+            const property = {
 
+                id: doc.id,
 
-...doc.data()
+                ...doc.data()
 
-
-};
+            };
 
 
 
+            // Only approved properties
+
+            if(property.status === "approved"){
+
+                allProperties.push(property);
+
+            }
+
+
+        });
 
 
 
+        console.log(
+            "Approved properties:",
+            allProperties
+        );
 
-// SHOW ONLY APPROVED
-
-if(property.status === "approved"){
 
 
-allProperties.push(property);
+        displayProperties(allProperties);
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            "Firebase Error:",
+            error
+        );
+
+
+
+        if(container){
+
+            container.innerHTML = `
+
+            <div class="no-property">
+
+            <h2>
+            Failed to load properties
+            </h2>
+
+            </div>
+
+            `;
+
+        }
+
+
+    }
 
 
 }
-
-
-
-});
-
-
-
-
-
-
-
-console.log(
-"Approved Properties:",
-allProperties
-);
-
-
-
-
-
-
-displayProperties(
-allProperties
-);
-
-
-
-
-}
-
-catch(error){
-
-
-console.error(
-"Firebase Error:",
-error
-);
-
-
-
-if(container){
-
-
-container.innerHTML = `
-
-<h2>
-Failed to load properties
-</h2>
-
-`;
-
-}
-
-
-}
-
-
-
-}
-
-
-
 
 
 
@@ -212,245 +179,199 @@ function displayProperties(list){
 
 
 
-if(!container)
-return;
+    if(!container)
+        return;
 
 
 
 
+    if(list.length === 0){
 
-container.innerHTML = "";
 
+        container.innerHTML = `
 
+        <div class="no-property">
 
 
+            <h2>
+            No approved properties available
+            </h2>
 
 
-if(list.length === 0){
+            <p>
+            Please check again later.
+            </p>
 
 
+        </div>
 
-container.innerHTML = `
+        `;
 
 
-<div class="no-property">
+        return;
 
+    }
 
-<h2>
-No approved properties available
-</h2>
 
 
-<p>
-Please check again later.
-</p>
 
 
-</div>
 
+    let html = "";
 
-`;
 
-return;
 
 
-}
 
+    // Homepage shows only 6
 
+    list.slice(0,6).forEach(property=>{
 
 
+        let image =
+        "images/no-image.jpg";
 
 
 
 
+        if(
 
-// SHOW ONLY 6 ON HOME PAGE
+            property.images &&
 
-list.slice(0,6).forEach(property=>{
+            Array.isArray(property.images)
 
+            &&
 
+            property.images.length > 0
 
+        ){
 
+            image =
+            property.images[0];
 
-let image =
-"images/no-image.jpg";
+        }
 
 
 
 
 
-// CLOUDINARY IMAGE URL
 
-if(
+        html += `
 
-Array.isArray(property.images)
 
-&&
+        <div class="property-card">
 
-property.images.length > 0
 
-){
 
+            <img
 
-image =
-property.images[0];
+            src="${image}"
 
+            alt="Property Image"
 
-}
+            loading="eager"
 
+            onerror="this.src='images/no-image.jpg'"
 
+            >
 
 
 
 
 
+            <div class="property-info">
 
 
-container.innerHTML += `
 
+                <h3>
 
+                ${property.title || "Rental House"}
 
-<div class="property-card">
+                </h3>
 
 
 
 
+                <p>
 
-<img
+                📍 ${property.location || "Not added"}
 
-src="${image}"
+                </p>
 
-alt="Property Image"
 
-loading="lazy"
 
-onerror="this.src='images/no-image.jpg'"
 
->
+                <p>
 
+                🏛 ${property.dzongkhag || ""}
 
+                </p>
 
 
 
 
+                <p>
 
+                🏘 ${property.gewog || ""}
 
-<div class="property-info">
+                </p>
 
 
 
 
+                <p>
 
+                🛏 ${property.bedrooms || 0}
 
-<h3>
+                Bedroom(s)
 
-${property.title || "Rental House"}
+                </p>
 
-</h3>
 
 
 
+                <p class="price">
 
+                Nu. ${Number(property.rent || 0).toLocaleString()}
 
+                / month
 
-<p>
+                </p>
 
-📍 ${property.location || "Not added"}
 
-</p>
 
 
+                <a
 
+                href="property.html?id=${property.id}"
 
+                class="btn">
 
+                View Details
 
-<p>
+                </a>
 
-🏛 ${property.dzongkhag || ""}
 
-</p>
 
+            </div>
 
 
 
+        </div>
 
 
-<p>
+        `;
 
-🏘 ${property.gewog || ""}
 
-</p>
+    });
 
 
 
 
 
+    // Render once only
 
-<p>
-
-🛏 ${property.bedrooms || 0}
-
-Bedroom(s)
-
-</p>
-
-
-
-
-
-
-<p class="price">
-
-Nu. ${Number(
-
-property.rent || 0
-
-).toLocaleString()}
-
-/ month
-
-</p>
-
-
-
-
-
-
-
-<a
-
-href="property.html?id=${property.id}"
-
-class="btn">
-
-View Details
-
-</a>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-`;
-
-
-
-
-
-});
-
+    container.innerHTML = html;
 
 
 
@@ -465,129 +386,91 @@ View Details
 
 
 // =====================================
-// SEARCH
+// SEARCH SYSTEM
 // =====================================
 
 
 if(searchInput){
 
 
+    searchInput.addEventListener(
+        "input",
+        ()=>{
 
-searchInput.addEventListener(
 
-"input",
+            const keyword =
+            normalizeText(
+                searchInput.value
+            );
 
-()=>{
 
 
+            const filtered =
+            allProperties.filter(property=>{
 
-const keyword =
 
-normalizeText(
 
-searchInput.value
+                const title =
+                normalizeText(
+                    property.title || ""
+                );
 
-);
 
 
+                const location =
+                normalizeText(
+                    property.location || ""
+                );
 
 
 
+                const dzongkhag =
+                normalizeText(
+                    property.dzongkhag || ""
+                );
 
-const filtered =
 
-allProperties.filter(property=>{
 
+                const gewog =
+                normalizeText(
+                    property.gewog || ""
+                );
 
 
 
 
-const title =
+                return (
 
-normalizeText(
-property.title || ""
-);
+                    title.includes(keyword)
 
+                    ||
 
+                    location.includes(keyword)
 
+                    ||
 
+                    dzongkhag.includes(keyword)
 
-const location =
+                    ||
 
-normalizeText(
-property.location || ""
-);
+                    gewog.includes(keyword)
 
+                );
 
 
+            });
 
 
-const dzongkhag =
 
-normalizeText(
-property.dzongkhag || ""
-);
+            displayProperties(filtered);
 
 
 
-
-
-const gewog =
-
-normalizeText(
-property.gewog || ""
-);
-
-
-
-
-
-
-
-return (
-
-title.includes(keyword)
-
-||
-
-location.includes(keyword)
-
-||
-
-dzongkhag.includes(keyword)
-
-||
-
-gewog.includes(keyword)
-
-
-);
-
-
-
-});
-
-
-
-
-
-
-displayProperties(filtered);
-
-
-
+        }
+    );
 
 
 }
-
-
-);
-
-
-
-}
-
-
 
 
 
@@ -597,7 +480,7 @@ displayProperties(filtered);
 
 
 // =====================================
-// START APP
+// START
 // =====================================
 
 

@@ -1,6 +1,8 @@
 // =====================================
-// DRUKRENT PROPERTY DETAILS
-// CLOUDINARY IMAGE VERSION
+// DRUKRENT PROPERTY DISPLAY
+// FIREBASE + CLOUDINARY IMAGE VERSION
+// APPROVED PROPERTY SYSTEM
+// FILTER + SEARCH SYSTEM
 // =====================================
 
 
@@ -8,56 +10,133 @@ import { db } from "./firebase-config.js";
 
 
 import {
-
-    doc,
-    getDoc
-
+    collection,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
 
-
-const container = document.getElementById(
-    "propertyDetails"
-);
-
+// =====================================
+// ELEMENTS
+// =====================================
 
 
+const container =
+document.getElementById("propertyContainer");
 
 
-const urlParams =
-new URLSearchParams(
-    window.location.search
-);
+const searchInput =
+document.getElementById("searchProperty");
+
+
+const dzongkhagFilter =
+document.getElementById("dzongkhagFilter");
+
+
+const gewogFilter =
+document.getElementById("gewogFilter");
+
+
+const bedroomFilter =
+document.getElementById("bedroomFilter");
+
+
+const priceFilter =
+document.getElementById("priceFilter");
 
 
 
-const propertyId =
-urlParams.get("id");
+
+let allProperties = [];
+
+
+
+
+// =====================================
+// LOCATION DATA
+// =====================================
+
+
+const locations = {
+
+
+"Thimphu":[
+"Chang",
+"Kawang",
+"Mewang",
+"Naro",
+"Geney"
+],
+
+
+"Paro":[
+"Doteng",
+"Dopshari",
+"Hungrel",
+"Lamgong",
+"Shaba",
+"Wangchang"
+],
+
+
+"Punakha":[
+"Barp",
+"Chubu",
+"Kabisa",
+"Toewang"
+],
+
+
+"Chhukha":[
+"Bongo",
+"Chapcha",
+"Phuentsholing"
+]
+
+
+};
 
 
 
 
 
 
-
-async function loadProperty(){
-
-
-
-if(!propertyId){
+// =====================================
+// LOAD DZONGKHAG
+// =====================================
 
 
-container.innerHTML = `
+function loadDzongkhag(){
 
-<h2>
-Property not found
-</h2>
+
+if(!dzongkhagFilter)
+return;
+
+
+
+dzongkhagFilter.innerHTML = `
+
+<option value="">
+All Dzongkhag
+</option>
 
 `;
 
-return;
+
+
+Object.keys(locations).forEach(dzongkhag=>{
+
+
+dzongkhagFilter.innerHTML += `
+
+<option value="${dzongkhag}">
+${dzongkhag}
+</option>
+
+`;
+
+});
 
 
 }
@@ -65,40 +144,162 @@ return;
 
 
 
+
+
+// =====================================
+// LOAD GEWOG
+// =====================================
+
+
+function loadGewog(){
+
+
+if(!gewogFilter)
+return;
+
+
+
+gewogFilter.innerHTML = `
+
+<option value="">
+All Gewog
+</option>
+
+`;
+
+
+
+gewogFilter.disabled = true;
+
+
+
+const selected =
+dzongkhagFilter.value;
+
+
+
+if(selected){
+
+
+locations[selected].forEach(gewog=>{
+
+
+gewogFilter.innerHTML += `
+
+<option value="${gewog}">
+${gewog}
+</option>
+
+`;
+
+});
+
+
+gewogFilter.disabled = false;
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+// =====================================
+// LOAD FIRESTORE PROPERTIES
+// =====================================
+
+
+async function loadProperties(){
+
+
+console.log(
+"Loading properties once"
+);
 
 
 
 try{
 
 
-const propertyRef =
-doc(
-    db,
-    "properties",
-    propertyId
+const snapshot =
+await getDocs(
+collection(db,"properties")
 );
 
 
 
-const snapshot =
-await getDoc(propertyRef);
+allProperties = [];
 
 
 
+snapshot.forEach(doc=>{
 
 
-if(!snapshot.exists()){
+const property = {
 
+id:doc.id,
+
+...doc.data()
+
+};
+
+
+
+// only approved
+
+if(property.status === "approved"){
+
+
+allProperties.push(property);
+
+
+}
+
+
+
+});
+
+
+
+displayProperties(allProperties);
+
+
+
+}
+
+
+
+catch(error){
+
+
+console.error(
+"Error loading properties:",
+error
+);
+
+
+
+if(container){
 
 container.innerHTML = `
 
 <h2>
-Property not found
+Failed loading properties
 </h2>
 
 `;
 
-return;
+}
+
+
+}
+
 
 
 }
@@ -108,42 +309,167 @@ return;
 
 
 
-const property =
-snapshot.data();
+
+
+// =====================================
+// DISPLAY PROPERTIES
+// =====================================
+
+
+function displayProperties(list){
+
+
+
+if(!container)
+return;
+
+
+
+
+if(list.length === 0){
+
+
+container.innerHTML = `
+
+<div class="no-property">
+
+<h2>
+No approved properties available
+</h2>
+
+<p>
+Please check again later.
+</p>
+
+</div>
+
+`;
+
+
+return;
+
+
+}
+
+
+
+
+let html = "";
+
+
+
+
+list.forEach(property=>{
+
+
+let image =
+"images/no-image.jpg";
+
+
+
+if(
+
+Array.isArray(property.images)
+
+&&
+
+property.images.length > 0
+
+){
+
+image =
+property.images[0];
+
+}
 
 
 
 
 
+html += `
 
 
-let gallery = "";
+<div class="property-card">
 
-
-
-
-
-if(property.images && property.images.length > 0){
-
-
-
-property.images.forEach(image=>{
-
-
-gallery += `
 
 
 <img
 
 src="${image}"
 
-class="detail-image"
+alt="Property Image"
 
-alt="House Image"
+loading="eager"
 
 onerror="this.src='images/no-image.jpg'"
 
 >
+
+
+
+
+
+<div class="property-info">
+
+
+<h3>
+
+${property.title || "Rental House"}
+
+</h3>
+
+
+
+<p>
+📍 ${property.location || ""}
+</p>
+
+
+
+<p>
+🏛 ${property.dzongkhag || ""}
+</p>
+
+
+
+<p>
+🏘 ${property.gewog || ""}
+</p>
+
+
+
+<p>
+🛏 ${property.bedrooms || 0} Bedroom(s)
+</p>
+
+
+
+<p class="price">
+
+Nu. ${Number(property.rent || 0).toLocaleString()}
+
+/ month
+
+</p>
+
+
+
+<a
+
+href="property.html?id=${property.id}"
+
+class="btn">
+
+View Details
+
+</a>
+
+
+
+</div>
+
+
+</div>
 
 
 `;
@@ -154,24 +480,8 @@ onerror="this.src='images/no-image.jpg'"
 
 
 
-}
 
-else{
-
-
-gallery = `
-
-
-<img
-
-src="images/no-image.jpg"
-
-class="detail-image"
-
->
-
-
-`;
+container.innerHTML = html;
 
 
 
@@ -185,222 +495,109 @@ class="detail-image"
 
 
 
+// =====================================
+// FILTER
+// =====================================
 
-container.innerHTML = `
 
+function filterProperties(){
 
 
-<div class="property-gallery">
+const dz =
+dzongkhagFilter.value.toLowerCase();
 
 
-${gallery}
+const gew =
+gewogFilter.value.toLowerCase();
 
 
-</div>
+const bed =
+bedroomFilter.value;
 
 
+const price =
+priceFilter.value;
 
 
 
-<div class="property-info">
 
+const filtered =
+allProperties.filter(property=>{
 
 
+return (
 
 
-<h1>
+dz === ""
 
-${property.title || "Rental Property"}
+||
 
-</h1>
+property.dzongkhag
+?.toLowerCase()
+=== dz
 
 
+)
 
 
+&&
 
-<p>
-📍 ${property.location || "Not added"}
-</p>
 
+(
 
 
+gew === ""
 
+||
 
-<p>
-🏛 ${property.dzongkhag || ""}
-</p>
+property.gewog
+?.toLowerCase()
+=== gew
 
 
+)
 
 
+&&
 
-<p>
-🏘 ${property.gewog || ""}
-</p>
 
+(
 
 
+bed === ""
 
+||
 
-<p>
-🛏 ${property.bedrooms || 0} Bedroom(s)
-</p>
+Number(property.bedrooms)
+>= Number(bed)
 
 
+)
 
 
+&&
 
-<p>
-🚿 ${property.bathrooms || 0} Bathroom(s)
-</p>
 
+(
 
 
+price === ""
 
+||
 
-<h2 class="price">
+Number(property.rent)
+<= Number(price)
 
-Nu. ${Number(property.rent || 0).toLocaleString()} / month
 
-</h2>
-
-
-
-
-
-
-
-<p>
-
-${property.description || "No description available"}
-
-</p>
-
-
-
-
-
-
-<h2>
-Owner Contact
-</h2>
-
-
-
-
-
-<p>
-👤 ${property.owner || ""}
-</p>
-
-
-
-
-
-<p>
-📞 ${property.phone || ""}
-</p>
-
-
-
-
-
-
-<a
-
-href="tel:${property.phone}"
-
-class="btn">
-
-Call Owner
-
-</a>
-
-
-
-
-
-<a
-
-href="https://wa.me/975${property.phone}"
-
-target="_blank"
-
-class="btn">
-
-WhatsApp
-
-</a>
-
-
-
-
-
-
-
-${
-
-property.map
-
-?
-
-`
-
-<br><br>
-
-<a
-
-href="${property.map}"
-
-target="_blank"
-
-class="btn">
-
-Google Map
-
-</a>
-
-`
-
-:
-
-""
-
-}
-
-
-
-
-
-
-</div>
-
-
-
-`;
-
-
-
-
-
-}
-
-catch(error){
-
-
-console.error(
-error
 );
 
 
 
-container.innerHTML = `
+});
 
-<h2>
-Error loading property
-</h2>
 
-`;
+
+displayProperties(filtered);
 
 
 
@@ -409,10 +606,147 @@ Error loading property
 
 
 
+
+
+
+
+
+// =====================================
+// SEARCH
+// =====================================
+
+
+if(searchInput){
+
+
+searchInput.addEventListener(
+"input",
+()=>{
+
+
+const keyword =
+searchInput.value.toLowerCase();
+
+
+
+const filtered =
+allProperties.filter(property=>{
+
+
+return (
+
+property.title
+?.toLowerCase()
+.includes(keyword)
+
+
+||
+
+property.location
+?.toLowerCase()
+.includes(keyword)
+
+
+||
+
+property.dzongkhag
+?.toLowerCase()
+.includes(keyword)
+
+
+||
+
+property.gewog
+?.toLowerCase()
+.includes(keyword)
+
+
+);
+
+
+});
+
+
+
+displayProperties(filtered);
+
+
+
+});
+
+
 }
 
 
 
 
 
-loadProperty();
+
+
+
+// =====================================
+// EVENTS
+// =====================================
+
+
+if(dzongkhagFilter){
+
+dzongkhagFilter.addEventListener(
+"change",
+()=>{
+
+loadGewog();
+
+filterProperties();
+
+}
+);
+
+}
+
+
+
+if(gewogFilter){
+
+gewogFilter.addEventListener(
+"change",
+filterProperties
+);
+
+}
+
+
+
+if(bedroomFilter){
+
+bedroomFilter.addEventListener(
+"change",
+filterProperties
+);
+
+}
+
+
+
+if(priceFilter){
+
+priceFilter.addEventListener(
+"change",
+filterProperties
+);
+
+}
+
+
+
+
+
+
+// =====================================
+// START
+// =====================================
+
+
+loadDzongkhag();
+
+loadProperties();
